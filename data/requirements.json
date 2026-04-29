@@ -1,0 +1,236 @@
+[
+  {
+    "id": "mccormick-math",
+    "category": "Mathematics",
+    "degree": "MCCORMICK_CORE",
+    "totalUnits": 4,
+    "courses": [
+      {
+        "code": "MATH 220-1",
+        "name": "Single-Variable Differential Calculus",
+        "units": 1
+      },
+      {
+        "code": "MATH 220-2",
+        "name": "Single-Variable Integral Calculus",
+        "units": 1
+      },
+      {
+        "code": "MATH 228-1",
+        "name": "Multivariable Differential Calculus for Engineering",
+        "units": 1,
+        "alternatives": ["MATH 230-1"]
+      },
+      {
+        "code": "MATH 228-2",
+        "name": "Multivariable Integral Calculus for Engineering",
+        "units": 1,
+        "alternatives": ["MATH 230-1"]
+      }
+    ]
+  },
+  {
+    "id": "mccormick-physics",
+    "category": "Basic Science — Physics",
+    "degree": "MCCORMICK_CORE",
+    "totalUnits": 2,
+    "courses": [
+      {
+        "code": "PHYSICS 135-2",
+        "name": "General Physics",
+        "units": 1,
+        "alternatives": ["PHYSICS 125-2", "PHYSICS 140-2"]
+      },
+      {
+        "code": "PHYSICS 136-2",
+        "name": "General Physics Laboratory",
+        "units": 0
+      },
+      {
+        "code": "PHYSICS 135-3",
+        "name": "General Physics",
+        "units": 1,
+        "alternatives": ["PHYSICS 125-3", "PHYSICS 140-3"]
+      },
+      {
+        "code": "PHYSICS 136-3",
+        "name": "General Physics Laboratory",
+        "units": 0
+      }
+    ]
+  },
+  {
+    "id": "mccormick-science-elective",
+    "category": "Basic Science — Elective",
+    "degree": "MCCORMICK_CORE",
+    "totalUnits": 1,
+    "description": "1 unit from Chemistry, Physics, Biological Science, Earth & Planetary Science, or Astronomy",
+    "courses": [
+      {
+        "code": "",
+        "name": "Science Elective",
+        "units": 1,
+        "isElective": true,
+        "electiveDescription": "1 unit from Chemistry, Physics, Biological Science, Earth & Planetary Science, or Astronomy"
+      }
+    ]
+  },
+  {
+    "id": "mccormick-ea",
+    "category": "Engineering Analysis",
+    "degree": "MCCORMICK_CORE",
+    "totalUnits": 4,
+    "courses": [
+      {
+        "code": "GEN_ENG 205-1",
+        "name": "Engineering Analysis I",
+        "units": 1
+      },
+      {
+        "code": "GEN_ENG 205-2",
+        "name": "Engineering Analysis II",
+        "units": 1
+      },
+      {
+        "code": "GEN_ENG 205-3",
+        "name": "Engineering Analysis III",
+        "units": 1
+      },
+      {
+        "code": "GEN_ENG 205-4",
+        "name": "Engineering Analysis IV",
+        "units": 1
+      }
+    ]
+  },
+  {
+    "id": "mccormick-design-comm",
+    "category": "Design & Communications",
+    "degree": "MCCORMICK_CORE",
+    "totalUnits": 3,
+    "courses": [
+      {
+        "code": "DSGN 106-1",
+        "name": "Design Thinking and Communication I",
+        "units": 0.5
+      },
+      {
+        "code": "DSGN 106-2",
+        "name": "Design Thinking and Communication II",
+        "units": 0.5
+      },
+      {
+        "code": "ENGLISH 106-1",
+        "name": "Writing in Special Contexts I",
+        "units": 0.5
+      },
+      {
+        "code": "ENGLISH 106-2",
+        "name": "Writing in Special Contexts II",
+        "units": 0.5
+      }
+    ]
+  },
+  {
+    "id": "mccormick-ssh",
+    "category": "Social Sciences/Humanities",
+    "degree": "MCCORMICK_CORE",
+    "totalUnits": 7,
+    "description": "7 units from approved Social Sciences or Humanities courses",
+    "courses": [
+      {
+        "code": "",
+        "name": "Social Sciences/Humanities Elective 1",
+        "units": 1,
+        "isElective": true,
+        "electiveDescription": "Any approved Social Sciences or Humanities course (1 unit)"
+      },
+      {
+        "code": "",
+        "name": "Social Sciences/Humanities Elective 2",
+        "units": 1,
+        "isElective": true,
+        "electiveDescription": "Any approved Social Sciences or Humanities course (1 unit)"
+      },
+      {
+        "code": "",
+        "name": "Social Sciences/Humanities Elective 3",
+        "units": 1,
+        "isElective": true,
+        "electiveDescription": "Any approved Social Sciences or Humanities course (1 unit)"
+      },
+      {
+        "code": "",
+        "name": "Social Sciences/Humanities Elective 4",
+        "units": 1,
+        "isElective": true,
+        "electiveDescription": "Any approved Social Sciences or Humanities course (1 unit)"
+      },
+      {
+        "code": "",
+        "name": "Social Sciences/Humanities Elective 5",
+        "units": 1,
+        "isElective": true,
+        "electiveDescription": "Any approved Social Sciences or Humanities course (1 unit)"
+      },
+      {
+        "code": "",
+        "name": "Social Sciences/Humanities Elective 6",
+        "units": 1,
+        "isElective": true,
+        "electiveDescription": "Any approved Social Sciences or Humanities course (1 unit)"
+      },
+      {
+        "code": "",
+        "name": "Social Sciences/Humanities Elective 7",
+        "units": 1,
+        "isElective": true,
+        "electiveDescription": "Any approved Social Sciences or Humanities course (1 unit)"
+      }
+    ]
+  },
+  {
+    "id": "mccormick-unrestricted",
+    "category": "Unrestricted Electives",
+    "degree": "MCCORMICK_CORE",
+    "totalUnits": 5,
+    "description": "5 units of any courses",
+    "courses": [
+      {
+        "code": "",
+        "name": "Unrestricted Elective 1",
+        "units": 1,
+        "isElective": true,
+        "electiveDescription": "Any course (1 unit)"
+      },
+      {
+        "code": "",
+        "name": "Unrestricted Elective 2",
+        "units": 1,
+        "isElective": true,
+        "electiveDescription": "Any course (1 unit)"
+      },
+      {
+        "code": "",
+        "name": "Unrestricted Elective 3",
+        "units": 1,
+        "isElective": true,
+        "electiveDescription": "Any course (1 unit)"
+      },
+      {
+        "code": "",
+        "name": "Unrestricted Elective 4",
+        "units": 1,
+        "isElective": true,
+        "electiveDescription": "Any course (1 unit)"
+      },
+      {
+        "code": "",
+        "name": "Unrestricted Elective 5",
+        "units": 1,
+        "isElective": true,
+        "electiveDescription": "Any course (1 unit)"
+      }
+    ]
+  }
+]
