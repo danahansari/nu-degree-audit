@@ -45,8 +45,9 @@ function MiniProgress({
 
   return (
     <div className="min-w-[220px]">
-      <div className="text-xs font-semibold text-white/90">
-        {label} <span className="font-normal text-white/80">{`${c.toFixed(1)} / ${total} units`}</span>
+      <div className="text-xs font-semibold">
+        {label}{" "}
+        <span className="summary-bar-subtle font-normal">{`${c.toFixed(1)} / ${total} units`}</span>
       </div>
       <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-white/30">
         <div className="flex h-full">
@@ -69,11 +70,11 @@ export function SummaryBar({
   const firstName = firstNameFromDisplayName(studentName);
 
   return (
-    <div className="sticky top-0 z-20 w-full bg-[#4E2A84] text-white">
+    <div className="summary-bar sticky top-0 z-20 w-full bg-[#4E2A84]">
       <div className="mx-auto flex max-w-4xl flex-col gap-4 px-6 py-4 md:flex-row md:items-center md:justify-between">
         <div className="min-w-0">
-          <div className="font-display text-base font-bold text-white">{`Hi, ${firstName}!`}</div>
-          <div className="text-sm text-white/85">{gpa ? `GPA: ${gpa}` : "GPA: —"}</div>
+          <div className="font-display text-base font-bold">{`Hi, ${firstName}!`}</div>
+          <div className="summary-bar-muted text-sm">{gpa ? `GPA: ${gpa}` : "GPA: —"}</div>
         </div>
 
         <div className="flex flex-col gap-3 md:flex-row md:items-center">
@@ -86,7 +87,7 @@ export function SummaryBar({
           <MiniProgress label="CS Minor" completed={csCompleted} inProgress={csInProgress} total={9} />
         </div>
 
-        <div className="text-sm font-semibold text-white/85 md:text-right">Class of 2028</div>
+        <div className="summary-bar-muted text-sm font-semibold md:text-right">Class of 2028</div>
       </div>
     </div>
   );

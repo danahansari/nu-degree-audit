@@ -8,6 +8,7 @@ import { computeAudit, getDoubleCounts, getProgressSummary } from "@/lib/matchCo
 import { getAllRequirements } from "@/lib/requirements";
 import { SummaryBar } from "@/components/SummaryBar";
 import { DashboardTabs } from "@/components/DashboardTabs";
+import { CourseLegend } from "@/components/CourseLegend";
 
 export default function DashboardPage() {
   const [rawCourses, setRawCourses] = useState<string | null>(null);
@@ -87,6 +88,10 @@ export default function DashboardPage() {
         <Link href="/" className="font-body text-xs font-medium text-gray-500 hover:text-gray-800 hover:underline">
           ← Upload New Transcript
         </Link>
+
+        <div className="mt-4">
+          <CourseLegend />
+        </div>
 
         <div className="mt-4">
           {showSkeleton ? (
