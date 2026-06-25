@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Carlito — open-source web font, metric-compatible with Calibri */
+.font-display,
+.font-heading,
+.font-body {
+  font-family: var(--font-carlito), ui-sans-serif, system-ui, sans-serif;
+}
