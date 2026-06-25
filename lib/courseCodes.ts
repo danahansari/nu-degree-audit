@@ -16,3 +16,11 @@ export function normalizeCode(code: string): string {
 
   return parts.join(" ");
 }
+
+export function makeCourseKey(course: { code: string; term: string; grade: string }): string {
+  return `${normalizeCode(course.code)}|${course.term}|${course.grade}`;
+}
+
+export function isApCreditCourse(course: { term: string; grade: string }): boolean {
+  return course.term === "AP Credit" || course.grade === "AP";
+}

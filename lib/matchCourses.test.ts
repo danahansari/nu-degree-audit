@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import { computeAudit, findExactMatch, getProgressSummary } from "./matchCourses";
+import { computeAudit, findExactMatch, getDoubleCounts, getProgressSummary } from "./matchCourses";
+import { apSelectionsToCourses } from "./apCredits";
+import { makeCourseKey } from "./courseCodes";
 import { getAllRequirements } from "./requirements";
 import { makeCourse } from "./testHelpers";
 
@@ -167,5 +169,76 @@ describe("EE degree audit", () => {
     const courses = [makeCourse("ELEC_ENG 398-0", { name: "Electrical Engineering Design" })];
     const design = audit(courses).find((r) => r.id === "ee-design");
     expect(design?.matchedCourses.some((m) => m.course.code === "ELEC_ENG 398-0")).toBe(true);
+  });
+});
+
+describe("manual allocations", () => {
+  it("assigns AP Chem to basic sciences when manually allocated", () => {
+    const apChemCourses = apSelectionsToCourses([{ examId: "chemistry", score: 5 }]);
+    const courses = [
+      makeCourse("PHYSICS 135-2"),
+      makeCourse("PHYSICS 136-2", { attempted: 0.33, earned: 0.33 }),
+      makeCourse("PHYSICS 135-3", { term: "2025 Winter" }),
+      makeCourse("PHYSICS 136-3", { attempted: 0.33, earned: 0.33, term: "2025 Winter" }),
+      ...apChemCourses,
+    ];
+    const allocations = Object.fromEntries(
+      apChemCourses.map((c) => [makeCourseKey(c), ["mccormick-basic-sciences"]]),
+    );
+    const results = computeAudit(courses, requirements, { allocations });
+    const basic = results.find((r) => r.id === "mccormick-basic-sciences");
+    const ssh = results.find((r) => r.id === "mccormick-ssh");
+    expect(basic?.matchedCourses.some((m) => m.course.code === "CHEM 1X1")).toBe(true);
+    expect(basic?.matchedCourses.some((m) => m.course.code === "CHEM 11X")).toBe(true);
+    expect(basic?.matchedCourses.some((m) => m.course.code === "CHEM 12X")).toBe(true);
+    expect(basic?.completedUnits).toBeGreaterThan(4);
+    expect(ssh?.matchedCourses.some((m) => m.course.code.startsWith("CHEM 1"))).toBe(false);
+  });
+
+  it("bulk-assigns multiple courses to unrestricted electives", () => {
+    const psych = apSelectionsToCourses([{ examId: "psychology", score: 5 }])[0];
+    const stats = apSelectionsToCourses([{ examId: "statistics", score: 5 }])[0];
+    const courses = [psych, stats];
+    const allocations = {
+      [makeCourseKey(psych)]: ["mccormick-unrestricted"],
+      [makeCourseKey(stats)]: ["mccormick-unrestricted"],
+    };
+    const results = computeAudit(courses, requirements, { allocations });
+    const unrestricted = results.find((r) => r.id === "mccormick-unrestricted");
+    expect(unrestricted?.matchedCourses.length).toBe(2);
+  });
+
+  it("does not double-count pinned courses across buckets", () => {
+    const apChemCourses = apSelectionsToCourses([{ examId: "chemistry", score: 5 }]);
+    const allocations = Object.fromEntries(
+      apChemCourses.map((c) => [makeCourseKey(c), ["mccormick-basic-sciences"]]),
+    );
+    const results = computeAudit(apChemCourses, requirements, { allocations });
+    const unrestricted = results.find((r) => r.id === "mccormick-unrestricted");
+    expect(unrestricted?.matchedCourses.some((m) => m.course.code.startsWith("CHEM 1"))).toBe(false);
+  });
+
+  it("double-counts COMP_SCI 211-0 for EE required and CS minor core", () => {
+    const courses = [makeCourse("COMP_SCI 211-0")];
+    const results = audit(courses);
+    const ee = results.find((r) => r.id === "ee-required");
+    const cs = results.find((r) => r.id === "cs-minor-core");
+    expect(ee?.matchedCourses.some((m) => m.course.code === "COMP_SCI 211-0")).toBe(true);
+    expect(cs?.matchedCourses.some((m) => m.course.code === "COMP_SCI 211-0")).toBe(true);
+    expect(getDoubleCounts(results)).toHaveLength(1);
+  });
+
+  it("applies manual multi-allocation to additional requirements", () => {
+    const psych = makeCourse("PSYCHOLOGY 110", { name: "Introduction to Psychology" });
+    const key = makeCourseKey(psych);
+    const results = computeAudit([psych], requirements, {
+      allocations: {
+        [key]: ["mccormick-ssh", "mccormick-unrestricted"],
+      },
+    });
+    const ssh = results.find((r) => r.id === "mccormick-ssh");
+    const unrestricted = results.find((r) => r.id === "mccormick-unrestricted");
+    expect(ssh?.matchedCourses.some((m) => m.course.code === "PSYCHOLOGY 110")).toBe(true);
+    expect(unrestricted?.matchedCourses.some((m) => m.course.code === "PSYCHOLOGY 110")).toBe(true);
   });
 });

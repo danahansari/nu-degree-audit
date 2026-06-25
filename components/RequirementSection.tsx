@@ -24,11 +24,13 @@ export function RequirementSection({ requirement }: RequirementSectionProps) {
   const [collapsed, setCollapsed] = useState(defaultCollapsed);
 
   const total = requirement.totalUnits || 0;
-  const completed = Math.min(requirement.completedUnits || 0, total);
-  const inProgress = Math.min(requirement.inProgressUnits || 0, Math.max(0, total - completed));
-  const pctCompleted = total > 0 ? (completed / total) * 100 : 0;
-  const pctInProgress = total > 0 ? (inProgress / total) * 100 : 0;
+  const completed = requirement.completedUnits || 0;
+  const inProgress = requirement.inProgressUnits || 0;
+  const pctCompleted = total > 0 ? Math.min(100, (completed / total) * 100) : 0;
+  const pctInProgress =
+    total > 0 ? Math.min(100 - pctCompleted, (inProgress / total) * 100) : 0;
   const isComplete = total > 0 && completed >= total;
+  const hasOverflow = total > 0 && completed > total;
 
   const badge = degreeBadge(requirement.degree);
 
@@ -92,6 +94,7 @@ export function RequirementSection({ requirement }: RequirementSectionProps) {
         <div className="flex items-center gap-3">
           <div className="text-xs font-medium text-gray-600">
             {completed.toFixed(1)} / {total.toFixed(1)} units
+            {hasOverflow ? <span className="ml-1 text-green-700">(extra credit)</span> : null}
           </div>
           <div className="text-gray-500">{collapsed ? "▼" : "▲"}</div>
         </div>

@@ -1,6 +1,13 @@
 "use client";
 
+import { ApCreditChecklist } from "@/components/ApCreditChecklist";
 import { UploadCard } from "@/components/UploadCard";
+import {
+  apSelectionsToCourses,
+  loadApCreditSelections,
+  mergeTranscriptAndApCredits,
+} from "@/lib/apCredits";
+import { clearAllocations } from "@/lib/courseAllocations";
 import type { ParsedCourse } from "@/lib/types";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -68,13 +75,17 @@ export default function Home() {
         throw new Error(message);
       }
 
-      const parsedCourses = "courses" in data ? data.courses : [];
+      const transcriptCourses = "courses" in data ? data.courses : [];
+      const apCourses = apSelectionsToCourses(loadApCreditSelections());
+      const mergedCourses = mergeTranscriptAndApCredits(transcriptCourses, apCourses);
+
       setProgress(100);
       setProgressLabel("Done!");
-      setCourses(parsedCourses);
+      setCourses(mergedCourses);
       setState("success");
 
-      sessionStorage.setItem("parsedCourses", JSON.stringify(parsedCourses));
+      clearAllocations();
+      sessionStorage.setItem("parsedCourses", JSON.stringify(mergedCourses));
       sessionStorage.setItem("studentName", "studentName" in data ? (data.studentName ?? "") : "");
       sessionStorage.setItem("gpa", "gpa" in data ? (data.gpa ?? "") : "");
 
@@ -91,8 +102,15 @@ export default function Home() {
       <div className="mx-auto max-w-3xl">
         <h1 className="text-3xl font-bold tracking-tight text-[#4E2A84]">NU Degree Audit</h1>
         <p className="mt-2 text-sm text-gray-600">Know exactly where you stand</p>
+        <p className="mt-1 text-xs font-medium text-[#4E2A84]/80">
+          Designed for EE major and CS minor
+        </p>
 
         <div className="mt-8">
+          <ApCreditChecklist />
+        </div>
+
+        <div className="mt-6">
           <UploadCard onFileSelect={onFileSelect} disabled={uploadDisabled} error={state === "error" && isUploadValidationError} />
           {state === "error" && isUploadValidationError ? (
             <div className="mt-3 text-sm font-medium text-red-700">{error}</div>
@@ -100,7 +118,7 @@ export default function Home() {
         </div>
 
         {state === "loading" && (
-          <div className="mt-8 w-full max-w-md" role="status" aria-live="polite" aria-label="Parsing transcript">
+          <div className="mt-8 w-full" role="status" aria-live="polite" aria-label="Parsing transcript">
             <div className="text-sm font-medium text-gray-800">{progressLabel}</div>
             <div className="mt-3 h-2.5 w-full overflow-hidden rounded-full bg-gray-200">
               <div

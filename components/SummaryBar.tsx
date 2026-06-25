@@ -23,10 +23,6 @@ function firstNameFromDisplayName(name: string): string {
   return trimmed.split(/\s+/)[0] || trimmed;
 }
 
-function clamp(n: number, min: number, max: number) {
-  return Math.max(min, Math.min(max, n));
-}
-
 function MiniProgress({
   label,
   completed,
@@ -38,10 +34,10 @@ function MiniProgress({
   inProgress: number;
   total: number;
 }) {
-  const c = clamp(completed, 0, total);
-  const ip = clamp(inProgress, 0, total - c);
-  const pctC = total > 0 ? (c / total) * 100 : 0;
-  const pctIP = total > 0 ? (ip / total) * 100 : 0;
+  const c = completed;
+  const ip = inProgress;
+  const pctC = total > 0 ? Math.min(100, (c / total) * 100) : 0;
+  const pctIP = total > 0 ? Math.min(100 - pctC, (ip / total) * 100) : 0;
 
   return (
     <div className="min-w-[220px]">

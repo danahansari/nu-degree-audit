@@ -1,14 +1,16 @@
-import type { MatchedRequirement, ParsedCourse, Requirement, RequirementCourse } from "./types";
+import type { CourseAllocationMap, MatchedRequirement, ParsedCourse, Requirement, RequirementCourse } from "./types";
+import { AUTO_ALLOCATION } from "./allocationTargets";
 import { isApprovedBasicScienceCourse, isBasicScienceLabCourse } from "./basicScienceCourses";
 import {
   isAbetEngineeringTopicsCourse,
   isEe300LevelCeeElective,
   isEeAdvancedTechnicalElective,
+  isEeDesignCourse,
   isEeTrackTechnicalElective,
 } from "./eeTechnicalElectives";
-import { normalizeCode } from "./courseCodes";
+import { makeCourseKey, normalizeCode } from "./courseCodes";
 
-export { normalizeCode };
+export { normalizeCode, makeCourseKey };
 
 export function findExactMatch(
   courseCode: string,
@@ -145,10 +147,37 @@ function shouldExcludeFromSsh(courseCode: string): boolean {
   );
 }
 
+export interface ComputeAuditOptions {
+  allocations?: CourseAllocationMap;
+}
+
+function slotKeyFor(req: Requirement, reqCourse: RequirementCourse, idx: number): string {
+  return reqCourse.code?.trim() ? reqCourse.code : `__ELECTIVE__:${req.id}:${idx}`;
+}
+
+function unitsMatchedToSlot(
+  matchedCourses: { course: ParsedCourse; requirementCourseCode: string }[],
+  slotKey: string,
+): number {
+  return matchedCourses
+    .filter((m) => m.requirementCourseCode === slotKey)
+    .reduce((sum, m) => {
+      const u = courseUnitsForRequirement(m.course);
+      return sum + u.completedUnits + u.inProgressUnits;
+    }, 0);
+}
+
 export function computeAudit(
   courses: ParsedCourse[],
   requirements: Requirement[],
+  options?: ComputeAuditOptions,
 ): MatchedRequirement[] {
+  const allocations = options?.allocations ?? {};
+  const pinnedKeys = new Set(
+    Object.entries(allocations)
+      .filter(([, reqIds]) => reqIds && reqIds.length > 0)
+      .map(([key]) => key),
+  );
   const normalizedToCourseInstances = new Map<string, ParsedCourse[]>();
   for (const c of courses) {
     const key = normalizeCode(c.code);
@@ -158,7 +187,10 @@ export function computeAudit(
     normalizedToCourseInstances.set(key, list);
   }
 
-  const makeCourseKey = (c: ParsedCourse) => `${normalizeCode(c.code)}|${c.term}|${c.grade}`;
+  const courseByKey = new Map<string, ParsedCourse>();
+  for (const c of courses) {
+    courseByKey.set(makeCourseKey(c), c);
+  }
 
   type Working = {
     requirement: Requirement;
@@ -226,11 +258,60 @@ export function computeAudit(
   const usedEeTrackKeys = new Set<string>();
   const usedEe300Keys = new Set<string>();
   const usedEeAdvancedKeys = new Set<string>();
+  const usedEeDesignKeys = new Set<string>();
   const usedEeAbetKeys = new Set<string>();
   const globallyUsedCourseKeys = new Set<string>();
 
   for (const w of working) {
     for (const key of w.usedCourseKeys) globallyUsedCourseKeys.add(key);
+  }
+
+  // Phase 1.5: apply user manual allocations (supports double-counting across requirements)
+  for (const [courseKey, requirementIds] of Object.entries(allocations)) {
+    if (!requirementIds?.length) continue;
+
+    const course = courseByKey.get(courseKey);
+    if (!course) continue;
+
+    for (const requirementId of requirementIds) {
+      if (!requirementId || requirementId === AUTO_ALLOCATION) continue;
+
+      const w = working.find((x) => x.requirement.id === requirementId);
+      if (!w) continue;
+      if (w.usedCourseKeys.has(courseKey)) continue;
+
+      let placed = false;
+
+      // Try exact-match slots (e.g. COMP_SCI 211-0 in ee-required / cs-minor-core)
+      for (const reqCourse of w.requirement.courses) {
+        if (reqCourse.isElective || !reqCourse.code?.trim()) continue;
+        if (w.satisfiedCourseCodes.has(normalizeCode(reqCourse.code))) continue;
+
+        const codes = new Set([normalizeCode(reqCourse.code)]);
+        for (const alt of reqCourse.alternatives ?? []) codes.add(normalizeCode(alt));
+        if (!codes.has(normalizeCode(course.code))) continue;
+
+        addMatch(w, course, reqCourse.code, reqCourse);
+        globallyUsedCourseKeys.add(courseKey);
+        placed = true;
+        break;
+      }
+
+      if (placed) continue;
+
+      // Elective slots
+      const slots = w.requirement.courses
+        .map((c, idx) => ({ c, idx }))
+        .filter(({ c }) => c.isElective || !c.code?.trim());
+
+      for (const { c: reqCourse, idx } of slots) {
+        const slotKey = slotKeyFor(w.requirement, reqCourse, idx);
+        addMatch(w, course, slotKey, reqCourse);
+        globallyUsedCourseKeys.add(courseKey);
+        placed = true;
+        break;
+      }
+    }
   }
 
   const fillElectivesForRequirement = (
@@ -247,27 +328,38 @@ export function computeAudit(
 
     for (const { c: reqCourse, idx } of slots) {
       const slotUnits = reqCourse.units || 0;
-      const remaining = w.requirement.totalUnits - w.completedUnits;
-
-      if (remaining <= 0) break;
-      if (slotUnits > 0 && remaining < slotUnits) break;
-
       const slotKey =
         reqCourse.code?.trim() ? reqCourse.code : `__ELECTIVE__:${w.requirement.id}:${idx}`;
 
-      const candidates = courses
-        .filter((course) => !globallyUsedCourseKeys.has(makeCourseKey(course)))
-        .filter((course) => !w.usedCourseKeys.has(makeCourseKey(course)))
-        .filter((course) => !usedWithinType.has(makeCourseKey(course)))
-        .filter(candidateFilter);
+      while (true) {
+        const remaining = w.requirement.totalUnits - w.completedUnits;
+        if (remaining <= 0) break;
 
-      const best = pickBestCourse(candidates, statusRankForElectives);
-      if (!best) continue;
+        const filledInSlot = unitsMatchedToSlot(w.matchedCourses, slotKey);
+        if (slotUnits > 0 && filledInSlot >= slotUnits) break;
 
-      usedWithinType.add(makeCourseKey(best));
-      globallyUsedCourseKeys.add(makeCourseKey(best));
-      addMatch(w, best, slotKey, reqCourse);
-      w.electiveUnitsFilled += slotUnits;
+        const candidates = courses
+          .filter((course) => !pinnedKeys.has(makeCourseKey(course)))
+          .filter((course) => !globallyUsedCourseKeys.has(makeCourseKey(course)))
+          .filter((course) => !w.usedCourseKeys.has(makeCourseKey(course)))
+          .filter((course) => !usedWithinType.has(makeCourseKey(course)))
+          .filter(candidateFilter)
+          .filter((course) => {
+            if (slotUnits <= 0) return true;
+            const courseUnits =
+              courseUnitsForRequirement(course).completedUnits +
+              courseUnitsForRequirement(course).inProgressUnits;
+            return filledInSlot + courseUnits <= slotUnits;
+          });
+
+        const best = pickBestCourse(candidates, statusRankForElectives);
+        if (!best) break;
+
+        usedWithinType.add(makeCourseKey(best));
+        globallyUsedCourseKeys.add(makeCourseKey(best));
+        addMatch(w, best, slotKey, reqCourse);
+        w.electiveUnitsFilled += slotUnits;
+      }
     }
   };
 
@@ -283,6 +375,13 @@ export function computeAudit(
     "ee-technical-electives-tracks",
     (c) => isEeTrackTechnicalElective(c.code),
     usedEeTrackKeys,
+  );
+
+  // Phase 3.5: EE design course (1 course) — before 300-level bucket steals design-only courses
+  fillElectivesForRequirement(
+    "ee-design",
+    (c) => isEeDesignCourse(c.code),
+    usedEeDesignKeys,
   );
 
   // Phase 4: EE 300/400-level CS/ECE/CE electives (2 courses)
@@ -335,14 +434,48 @@ export function computeAudit(
 
     return {
       ...w.requirement,
-      completedUnits: Math.min(w.completedUnits, w.requirement.totalUnits),
-      inProgressUnits: Math.min(
-        w.inProgressUnits,
-        w.requirement.totalUnits - Math.min(w.completedUnits, w.requirement.totalUnits),
-      ),
+      completedUnits: w.completedUnits,
+      inProgressUnits: w.inProgressUnits,
       matchedCourses: w.matchedCourses,
       unmetCourses,
     };
+  });
+}
+
+export function getCourseAssignmentIds(
+  course: ParsedCourse,
+  auditResults: MatchedRequirement[],
+): string[] {
+  const key = makeCourseKey(course);
+  const ids: string[] = [];
+  for (const req of auditResults) {
+    for (const m of req.matchedCourses) {
+      if (makeCourseKey(m.course) === key && !ids.includes(req.id)) {
+        ids.push(req.id);
+      }
+    }
+  }
+  return ids;
+}
+
+export function getCourseAssignment(
+  course: ParsedCourse,
+  auditResults: MatchedRequirement[],
+): { requirementId: string; label: string } | null {
+  const ids = getCourseAssignmentIds(course, auditResults);
+  if (ids.length === 0) return null;
+  const req = auditResults.find((r) => r.id === ids[0]);
+  return req ? { requirementId: req.id, label: req.category } : null;
+}
+
+export function getAllocatableCourses(courses: ParsedCourse[]): ParsedCourse[] {
+  const seen = new Set<string>();
+  return courses.filter((course) => {
+    if (course.status === "not_taken") return false;
+    const key = makeCourseKey(course);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
   });
 }
 
@@ -353,7 +486,7 @@ export function getDoubleCounts(
 
   for (const req of auditResults) {
     for (const m of req.matchedCourses) {
-      const key = `${normalizeCode(m.course.code)}|${m.course.term}|${m.course.grade}`;
+      const key = makeCourseKey(m.course);
       const entry =
         map.get(key) ??
         (() => {
@@ -405,11 +538,11 @@ export function getProgressSummary(auditResults: MatchedRequirement[]): {
   }
 
   return {
-    eeCompleted: Math.min(eeCompleted, eeTotal),
-    eeInProgress: Math.min(eeInProgress, Math.max(0, eeTotal - Math.min(eeCompleted, eeTotal))),
+    eeCompleted,
+    eeInProgress,
     eeTotal,
-    csCompleted: Math.min(csCompleted, csTotal),
-    csInProgress: Math.min(csInProgress, Math.max(0, csTotal - Math.min(csCompleted, csTotal))),
+    csCompleted,
+    csInProgress,
     csTotal,
   };
 }

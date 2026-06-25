@@ -79,7 +79,11 @@ const BASIC_SCIENCE_CODES = new Set([
   "CSD 303-0",
   "PSYCH 221-0",
   // AP / transfer placeholders eligible for basic science
-  "CHEM 1XX",
+  "CHEM 1X0",
+  "CHEM 1X1",
+  "CHEM 1X2",
+  "CHEM 11X",
+  "CHEM 12X",
 ]);
 
 export function isApprovedBasicScienceCourse(courseCode: string): boolean {

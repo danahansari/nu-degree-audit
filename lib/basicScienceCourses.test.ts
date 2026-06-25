@@ -18,8 +18,10 @@ describe("basicScienceCourses", () => {
     expect(isApprovedBasicScienceCourse("PHYSICS 140-3")).toBe(true);
   });
 
-  it("recognizes AP chemistry placeholder", () => {
-    expect(isApprovedBasicScienceCourse("CHEM 1XX")).toBe(true);
+  it("recognizes AP chemistry placeholders", () => {
+    for (const code of ["CHEM 1X0", "CHEM 1X1", "CHEM 1X2", "CHEM 11X", "CHEM 12X"]) {
+      expect(isApprovedBasicScienceCourse(code)).toBe(true);
+    }
   });
 
   it("rejects non-basic-science courses", () => {

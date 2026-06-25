@@ -1,86 +1,302 @@
 [
   {
+    "id": "calc-ab",
     "exam": "Mathematics (Calculus) AB",
-    "score": "4",
-    "courseCredit": "MATH 220-1",
-    "units": 1,
-    "allocation": "Math Requirement"
+    "category": "Mathematics",
+    "scoreOptions": [
+      { "minScore": 4, "courses": [{ "code": "MATH 220-1", "name": "AP Calculus AB", "units": 1 }] },
+      {
+        "minScore": 5,
+        "courses": [
+          { "code": "MATH 220-1", "name": "AP Calculus AB", "units": 1 },
+          { "code": "MATH 220-2", "name": "AP Calculus AB", "units": 1 }
+        ]
+      }
+    ],
+    "defaultAllocations": ["mccormick-math"]
   },
   {
-    "exam": "Mathematics (Calculus) AB",
-    "score": "5",
-    "courseCredit": "MATH 220-1, MATH 220-2",
-    "units": 2,
-    "allocation": "Math Requirement"
-  },
-  {
+    "id": "calc-bc",
     "exam": "Mathematics (Calculus) BC",
-    "score": "4",
-    "courseCredit": "MATH 220-1, MATH 220-2",
-    "units": 2,
-    "allocation": "Math Requirement"
+    "category": "Mathematics",
+    "scoreOptions": [
+      {
+        "minScore": 4,
+        "courses": [
+          { "code": "MATH 220-1", "name": "AP Calculus BC", "units": 1 },
+          { "code": "MATH 220-2", "name": "AP Calculus BC", "units": 1 }
+        ]
+      },
+      {
+        "minScore": 5,
+        "courses": [
+          { "code": "MATH 220-1", "name": "AP Calculus BC", "units": 1 },
+          { "code": "MATH 220-2", "name": "AP Calculus BC", "units": 1 },
+          { "code": "MATH 226-0", "name": "AP Calculus BC", "units": 1 }
+        ]
+      }
+    ],
+    "defaultAllocations": ["mccormick-math", "mccormick-unrestricted"]
   },
   {
-    "exam": "Mathematics (Calculus) BC",
-    "score": "5",
-    "courseCredit": "MATH 220-1, MATH 220-2, MATH 226-0",
-    "units": 3,
-    "allocation": "Math Requirement & Unrestricted Elective (MATH 226-0)"
-  },
-  {
-    "exam": "Physics C (Electricity & Magnetism)",
-    "score": "5",
-    "courseCredit": "PHYSICS 135-2, PHYSICS 136-2",
-    "units": 1.34,
-    "allocation": "Basic Science or Unrestricted Elective"
-  },
-  {
-    "exam": "Physics C (Mechanics)",
-    "score": "5",
-    "courseCredit": "PHYSICS 135-1, PHYSICS 136-1",
-    "units": 1.34,
-    "allocation": "Unrestricted Elective or Basic Science"
-  },
-  {
-    "exam": "Chemistry",
-    "score": "5",
-    "courseCredit": "CHEM 1XX",
-    "units": 1,
-    "allocation": "Basic Science or Unrestricted Elective"
-  },
-  {
-    "exam": "Biology",
-    "score": "5",
-    "courseCredit": "BIOL_SCI 1XX",
-    "units": 1,
-    "allocation": "Unrestricted Elective"
-  },
-  {
+    "id": "statistics",
     "exam": "Statistics",
-    "score": "4, 5",
-    "courseCredit": "STAT 210-0",
-    "units": 1,
-    "allocation": "Unrestricted Elective or Major Requirement"
+    "category": "Mathematics",
+    "scoreOptions": [
+      { "minScore": 4, "courses": [{ "code": "STAT 210-0", "name": "AP Statistics", "units": 1 }] }
+    ],
+    "defaultAllocations": ["mccormick-unrestricted"]
   },
   {
+    "id": "chemistry",
+    "exam": "Chemistry",
+    "category": "Science",
+    "scoreOptions": [
+      {
+        "minScore": 5,
+        "courses": [
+          { "code": "CHEM 1X1", "name": "AP Chemistry", "units": 1 },
+          { "code": "CHEM 11X", "name": "AP Chemistry", "units": 0.33 },
+          { "code": "CHEM 1X0", "name": "AP Chemistry", "units": 1 },
+          { "code": "CHEM 1X2", "name": "AP Chemistry", "units": 1 },
+          { "code": "CHEM 12X", "name": "AP Chemistry", "units": 0.33 }
+        ]
+      }
+    ],
+    "defaultAllocations": ["mccormick-basic-sciences", "mccormick-unrestricted"]
+  },
+  {
+    "id": "biology",
+    "exam": "Biology",
+    "category": "Science",
+    "scoreOptions": [
+      { "minScore": 5, "courses": [{ "code": "BIOL_SCI 1XX", "name": "AP Biology", "units": 1 }] }
+    ],
+    "defaultAllocations": ["mccormick-unrestricted"]
+  },
+  {
+    "id": "physics-c-em",
+    "exam": "Physics C (Electricity & Magnetism)",
+    "category": "Science",
+    "scoreOptions": [
+      {
+        "minScore": 5,
+        "courses": [
+          { "code": "PHYSICS 135-2", "name": "AP Physics C E&M", "units": 1 },
+          { "code": "PHYSICS 136-2", "name": "AP Physics C E&M Lab", "units": 0.34 }
+        ]
+      }
+    ],
+    "defaultAllocations": ["mccormick-basic-sciences", "mccormick-unrestricted"]
+  },
+  {
+    "id": "physics-c-mechanics",
+    "exam": "Physics C (Mechanics)",
+    "category": "Science",
+    "scoreOptions": [
+      {
+        "minScore": 5,
+        "courses": [
+          { "code": "PHYSICS 135-1", "name": "AP Physics C Mechanics", "units": 1 },
+          { "code": "PHYSICS 136-1", "name": "AP Physics C Mechanics Lab", "units": 0.34 }
+        ]
+      }
+    ],
+    "defaultAllocations": ["mccormick-basic-sciences", "mccormick-unrestricted"]
+  },
+  {
+    "id": "physics-1",
+    "exam": "Physics 1",
+    "category": "Science",
+    "scoreOptions": [
+      {
+        "minScore": 5,
+        "courses": [
+          { "code": "PHYSICS 130-1", "name": "AP Physics 1", "units": 1 },
+          { "code": "PHYSICS 13X-1", "name": "AP Physics 1 Lab", "units": 0.34 }
+        ]
+      }
+    ],
+    "defaultAllocations": ["mccormick-unrestricted"]
+  },
+  {
+    "id": "physics-2",
+    "exam": "Physics 2",
+    "category": "Science",
+    "scoreOptions": [
+      {
+        "minScore": 5,
+        "courses": [
+          { "code": "PHYSICS 130-2", "name": "AP Physics 2", "units": 1 },
+          { "code": "PHYSICS 13X-2", "name": "AP Physics 2 Lab", "units": 0.34 }
+        ]
+      }
+    ],
+    "defaultAllocations": ["mccormick-unrestricted"]
+  },
+  {
+    "id": "environmental-science",
+    "exam": "Environmental Science",
+    "category": "Science",
+    "scoreOptions": [
+      { "minScore": 5, "courses": [{ "code": "EARTH 1ES", "name": "AP Environmental Science", "units": 1 }] }
+    ],
+    "defaultAllocations": ["mccormick-unrestricted"]
+  },
+  {
+    "id": "computer-science-a",
     "exam": "Computer Science A",
-    "score": "4, 5",
-    "courseCredit": "COMP_SCI 1CA",
-    "units": 1,
-    "allocation": "Unrestricted Elective"
+    "category": "Computer Science",
+    "scoreOptions": [
+      { "minScore": 4, "courses": [{ "code": "COMP_SCI 1CA", "name": "AP Computer Science A", "units": 1 }] }
+    ],
+    "defaultAllocations": ["mccormick-unrestricted"]
   },
   {
+    "id": "computer-science-principles",
+    "exam": "Computer Science Principles",
+    "category": "Computer Science",
+    "scoreOptions": [
+      { "minScore": 4, "courses": [{ "code": "COMP_SCI 1CP", "name": "AP Computer Science Principles", "units": 1 }] }
+    ],
+    "defaultAllocations": ["mccormick-unrestricted"]
+  },
+  {
+    "id": "english-lang",
     "exam": "English (Language and Composition)",
-    "score": "5",
-    "courseCredit": "ENGLISH 1LC",
-    "units": 2,
-    "allocation": "Theme or Unrestricted Elective"
+    "category": "Humanities",
+    "scoreOptions": [
+      { "minScore": 5, "courses": [{ "code": "ENGLISH 1LC", "name": "AP English Language", "units": 2 }] }
+    ],
+    "defaultAllocations": ["mccormick-ssh", "mccormick-unrestricted"]
   },
   {
+    "id": "english-lit",
+    "exam": "English (Literature and Composition)",
+    "category": "Humanities",
+    "scoreOptions": [
+      { "minScore": 5, "courses": [{ "code": "ENGLISH 1LT", "name": "AP English Literature", "units": 2 }] }
+    ],
+    "defaultAllocations": ["mccormick-ssh", "mccormick-unrestricted"]
+  },
+  {
+    "id": "psychology",
     "exam": "Psychology",
-    "score": "5",
-    "courseCredit": "PSYCHOLOGY 110",
-    "units": 1,
-    "allocation": "Theme or Unrestricted Elective"
+    "category": "Social Sciences",
+    "scoreOptions": [
+      { "minScore": 5, "courses": [{ "code": "PSYCHOLOGY 110", "name": "AP Psychology", "units": 1 }] }
+    ],
+    "defaultAllocations": ["mccormick-ssh", "mccormick-unrestricted"]
+  },
+  {
+    "id": "economics-macro",
+    "exam": "Economics (Macro)",
+    "category": "Social Sciences",
+    "scoreOptions": [
+      { "minScore": 5, "courses": [{ "code": "ECON 201", "name": "AP Macroeconomics", "units": 1 }] }
+    ],
+    "defaultAllocations": ["mccormick-ssh", "mccormick-unrestricted"]
+  },
+  {
+    "id": "economics-micro",
+    "exam": "Economics (Micro)",
+    "category": "Social Sciences",
+    "scoreOptions": [
+      { "minScore": 5, "courses": [{ "code": "ECON 202", "name": "AP Microeconomics", "units": 1 }] }
+    ],
+    "defaultAllocations": ["mccormick-ssh", "mccormick-unrestricted"]
+  },
+  {
+    "id": "gov-us",
+    "exam": "Government and Politics (United States)",
+    "category": "Social Sciences",
+    "scoreOptions": [
+      { "minScore": 5, "courses": [{ "code": "POLI_SCI 2XX", "name": "AP US Government", "units": 1 }] }
+    ],
+    "defaultAllocations": ["mccormick-ssh", "mccormick-unrestricted"]
+  },
+  {
+    "id": "gov-comparative",
+    "exam": "Government and Politics (Comparative)",
+    "category": "Social Sciences",
+    "scoreOptions": [
+      { "minScore": 5, "courses": [{ "code": "POLI_SCI 2XX", "name": "AP Comparative Government", "units": 1 }] }
+    ],
+    "defaultAllocations": ["mccormick-ssh", "mccormick-unrestricted"]
+  },
+  {
+    "id": "history-european",
+    "exam": "History (European)",
+    "category": "Humanities",
+    "scoreOptions": [
+      { "minScore": 5, "courses": [{ "code": "HISTORY 2EU", "name": "AP European History", "units": 2 }] }
+    ],
+    "defaultAllocations": ["mccormick-ssh", "mccormick-unrestricted"]
+  },
+  {
+    "id": "history-us",
+    "exam": "History (United States)",
+    "category": "Humanities",
+    "scoreOptions": [
+      { "minScore": 5, "courses": [{ "code": "HISTORY 2US", "name": "AP US History", "units": 2 }] }
+    ],
+    "defaultAllocations": ["mccormick-ssh", "mccormick-unrestricted"]
+  },
+  {
+    "id": "history-world",
+    "exam": "History (World)",
+    "category": "Humanities",
+    "scoreOptions": [
+      { "minScore": 5, "courses": [{ "code": "HISTORY 2WL", "name": "AP World History", "units": 2 }] }
+    ],
+    "defaultAllocations": ["mccormick-ssh", "mccormick-unrestricted"]
+  },
+  {
+    "id": "music-theory",
+    "exam": "Music Theory",
+    "category": "Humanities",
+    "scoreOptions": [
+      { "minScore": 5, "courses": [{ "code": "GEN_MUS 252", "name": "AP Music Theory", "units": 1 }] }
+    ],
+    "defaultAllocations": ["mccormick-ssh", "mccormick-unrestricted"]
+  },
+  {
+    "id": "geography-human",
+    "exam": "Geography (Human)",
+    "category": "Social Sciences",
+    "scoreOptions": [
+      { "minScore": 5, "courses": [{ "code": "EARTH 1GE", "name": "AP Human Geography", "units": 1 }] }
+    ],
+    "defaultAllocations": ["mccormick-ssh", "mccormick-unrestricted"]
+  },
+  {
+    "id": "spanish-lang",
+    "exam": "Spanish Language and Culture",
+    "category": "Languages",
+    "scoreOptions": [
+      { "minScore": 4, "courses": [{ "code": "SPANISH 2LN", "name": "AP Spanish Language", "units": 1 }] },
+      { "minScore": 5, "courses": [{ "code": "SPANISH 2LN", "name": "AP Spanish Language", "units": 2 }] }
+    ],
+    "defaultAllocations": ["mccormick-ssh", "mccormick-unrestricted"]
+  },
+  {
+    "id": "french-lang",
+    "exam": "French Language and Culture",
+    "category": "Languages",
+    "scoreOptions": [
+      { "minScore": 4, "courses": [{ "code": "FRENCH 1LN", "name": "AP French Language", "units": 1 }] },
+      { "minScore": 5, "courses": [{ "code": "FRENCH 2LN", "name": "AP French Language", "units": 2 }] }
+    ],
+    "defaultAllocations": ["mccormick-ssh", "mccormick-unrestricted"]
+  },
+  {
+    "id": "chinese-lang",
+    "exam": "Chinese Language and Culture",
+    "category": "Languages",
+    "scoreOptions": [
+      { "minScore": 4, "courses": [{ "code": "CHINESE 1LN", "name": "AP Chinese Language", "units": 1 }] },
+      { "minScore": 5, "courses": [{ "code": "CHINESE 1LN", "name": "AP Chinese Language", "units": 2 }] }
+    ],
+    "defaultAllocations": ["mccormick-ssh", "mccormick-unrestricted"]
   }
 ]

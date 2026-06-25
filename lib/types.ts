@@ -11,6 +11,33 @@ export type CourseStatus = "completed" | "in_progress" | "transfer" | "not_taken
  * Represents a single course extracted from a Northwestern University transcript PDF.
  * Contains all metadata about the course including enrollment term, grade, and units.
  */
+/** courseKey -> requirement IDs this course should count toward (supports double-counting) */
+export type CourseAllocationMap = Record<string, string[]>;
+
+export interface ApCreditCourseDef {
+  code: string;
+  name: string;
+  units: number;
+}
+
+export interface ApCreditScoreOption {
+  minScore: number;
+  courses: ApCreditCourseDef[];
+}
+
+export interface ApCreditExam {
+  id: string;
+  exam: string;
+  category: string;
+  scoreOptions: ApCreditScoreOption[];
+  defaultAllocations: string[];
+}
+
+export interface ApCreditSelection {
+  examId: string;
+  score: number;
+}
+
 export interface ParsedCourse {
   /** Course code (e.g. "COMP_SCI 111-0") */
   code: string;

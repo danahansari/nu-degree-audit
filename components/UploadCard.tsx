@@ -29,7 +29,7 @@ export function UploadCard({ onFileSelect, disabled, error }: UploadCardProps) {
   };
 
   return (
-    <div className="w-full max-w-xl">
+    <div className="w-full">
       <input
         id={inputId}
         ref={inputRef}
