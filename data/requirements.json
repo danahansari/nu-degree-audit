@@ -232,5 +232,173 @@
         "electiveDescription": "Any course (1 unit)"
       }
     ]
+  },
+  {
+    "id": "cs-minor-prereqs",
+    "category": "CS Minor Prerequisites",
+    "degree": "CS_MINOR",
+    "totalUnits": 6,
+    "description": "These prerequisites overlap with EE degree requirements and do not require additional courses.",
+    "courses": [
+      {
+        "code": "MATH 220-1",
+        "name": "Single-Variable Differential Calculus",
+        "units": 1
+      },
+      {
+        "code": "MATH 220-2",
+        "name": "Single-Variable Integral Calculus",
+        "units": 1
+      },
+      {
+        "code": "MATH 228-1",
+        "name": "Multivariable Calculus",
+        "units": 1,
+        "alternatives": ["MATH 228-2", "MATH 230-1"]
+      },
+      {
+        "code": "GEN_ENG 205-1",
+        "name": "Engineering Analysis I",
+        "units": 1
+      },
+      {
+        "code": "GEN_ENG 205-2",
+        "name": "Engineering Analysis II",
+        "units": 1
+      },
+      {
+        "code": "GEN_ENG 205-3",
+        "name": "Engineering Analysis III",
+        "units": 1
+      }
+    ]
+  },
+  {
+    "id": "cs-minor-core",
+    "category": "CS Minor Core Courses",
+    "degree": "CS_MINOR",
+    "totalUnits": 5,
+    "description": "All required. For the intro programming requirement, students typically take either COMP_SCI 111-0 or COMP_SCI 150-0 (not both). Note: At least 4 of these must be unique to the minor (not used toward another degree/minor).",
+    "courses": [
+      {
+        "code": "COMP_SCI 111-0",
+        "name": "Fundamentals of Computer Programming",
+        "units": 1,
+        "alternatives": ["COMP_SCI 150-0"]
+      },
+      {
+        "code": "COMP_SCI 211-0",
+        "name": "Fundamentals of Computer Programming II",
+        "units": 1
+      },
+      {
+        "code": "COMP_SCI 212-0",
+        "name": "Mathematical Foundations of CS: Discrete Math",
+        "units": 1
+      },
+      {
+        "code": "COMP_SCI 213-0",
+        "name": "Introduction to Computer Systems",
+        "units": 1
+      },
+      {
+        "code": "COMP_SCI 214-0",
+        "name": "Data Structures & Algorithms",
+        "units": 1
+      }
+    ]
+  },
+  {
+    "id": "cs-minor-theory",
+    "category": "CS Minor Breadth — Theory",
+    "degree": "CS_MINOR",
+    "totalUnits": 1,
+    "description": "1 slot — pick ONE from: COMP_SCI 335-0, COMP_SCI 336-0. Breadth note: Student must complete exactly 3 of the 5 breadth areas.",
+    "courses": [
+      {
+        "code": "",
+        "name": "Breadth Elective — Theory",
+        "units": 1,
+        "isElective": true,
+        "electiveDescription": "Pick ONE: COMP_SCI 335-0 (Intro to Theory of Computation) or COMP_SCI 336-0 (Design & Analysis of Algorithms)"
+      }
+    ]
+  },
+  {
+    "id": "cs-minor-systems",
+    "category": "CS Minor Breadth — Systems",
+    "degree": "CS_MINOR",
+    "totalUnits": 1,
+    "description": "1 slot — pick ONE from approved Systems breadth list. Breadth note: Student must complete exactly 3 of the 5 breadth areas.",
+    "courses": [
+      {
+        "code": "",
+        "name": "Breadth Elective — Systems",
+        "units": 1,
+        "isElective": true,
+        "electiveDescription": "Pick ONE: COMP_SCI 322-0, 339-0, 340-0, 343-0, 345-0, 346-0, 350-0, 354-0, 358-0, 368-0, 440-0, 441-0, 443-0, 446-0, 450-0, 468-0; COMP_ENG 303-0, 346-0, 358-0, 361-0, 368-0, 468-0"
+      }
+    ]
+  },
+  {
+    "id": "cs-minor-ai",
+    "category": "CS Minor Breadth — Artificial Intelligence",
+    "degree": "CS_MINOR",
+    "totalUnits": 1,
+    "description": "1 slot — pick ONE from approved Artificial Intelligence breadth list. Breadth note: Student must complete exactly 3 of the 5 breadth areas.",
+    "courses": [
+      {
+        "code": "",
+        "name": "Breadth Elective — Artificial Intelligence",
+        "units": 1,
+        "isElective": true,
+        "electiveDescription": "Pick ONE: COMP_SCI 325-0, 337-0, 344-0, 348-0, 349-0, 371-0, 372-0"
+      }
+    ]
+  },
+  {
+    "id": "cs-minor-interfaces",
+    "category": "CS Minor Breadth — Interfaces",
+    "degree": "CS_MINOR",
+    "totalUnits": 1,
+    "description": "1 slot — pick ONE from approved Interfaces breadth list. Breadth note: Student must complete exactly 3 of the 5 breadth areas.",
+    "courses": [
+      {
+        "code": "",
+        "name": "Breadth Elective — Interfaces",
+        "units": 1,
+        "isElective": true,
+        "electiveDescription": "Pick ONE: COMP_SCI 313-0, 315-0, 329-0, 330-0, 331-0, 333-0, 351-1, 352-0, 353-0, 370-0, 372-0, 376-0, 377-0; ELEC_ENG 332-0"
+      }
+    ]
+  },
+  {
+    "id": "cs-minor-software",
+    "category": "CS Minor Breadth — Software Development",
+    "degree": "CS_MINOR",
+    "totalUnits": 1,
+    "description": "1 slot — pick ONE from approved Software Development breadth list. Breadth note: Student must complete exactly 3 of the 5 breadth areas.",
+    "courses": [
+      {
+        "code": "",
+        "name": "Breadth Elective — Software Development",
+        "units": 1,
+        "isElective": true,
+        "electiveDescription": "Pick ONE: COMP_SCI 310-0, 321-0, 338-0, 377-0, 380-0, 392-0, 393-0, 394-0"
+      }
+    ]
+  },
+  {
+    "id": "ee-required",
+    "category": "EE Required Courses",
+    "degree": "EE",
+    "totalUnits": 1,
+    "courses": [
+      {
+        "code": "ELEC_ENG 202-0",
+        "name": "EE Required Course",
+        "units": 1
+      }
+    ]
   }
 ]
