@@ -7,8 +7,10 @@ import { parseCourses } from "@/lib/claudeParser";
 import { parseCoursesWithGemini } from "@/lib/geminiParser";
 import { extractTextFromPDF } from "@/lib/parsePDF";
 
-const MAX_BYTES = 10 * 1024 * 1024; // 10MB
-const CLAUDE_TIMEOUT_MS = 30_000;
+const MAX_BYTES = 4.5 * 1024 * 1024; // Vercel serverless body limit (~4.5MB)
+const PARSE_TIMEOUT_MS = 55_000;
+
+export const maxDuration = 60;
 
 const PDF_READ_ERROR =
   "Could not read the PDF. Try re-downloading your transcript from CAESAR (Student → Transcript → View Unofficial Transcript).";
@@ -85,6 +87,15 @@ function isProbablyPdf(file: File): boolean {
 
 export async function POST(request: Request) {
   try {
+    const hasGeminiKey = !!(process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY);
+    const hasAnthropicKey = !!process.env.ANTHROPIC_API_KEY;
+    if (!hasGeminiKey && !hasAnthropicKey) {
+      return NextResponse.json(
+        { error: "Server is missing an AI API key. Set GEMINI_API_KEY or ANTHROPIC_API_KEY in Vercel." },
+        { status: 500 },
+      );
+    }
+
     const formData = await request.formData();
     const transcript = formData.get("transcript");
 
@@ -99,7 +110,7 @@ export async function POST(request: Request) {
     if (transcript.size > MAX_BYTES) {
       return NextResponse.json(
         {
-          error: "File too large. Please upload your transcript PDF (should be under 10MB)",
+          error: "File too large. Please upload your transcript PDF (should be under 4.5MB)",
         },
         { status: 400 },
       );
@@ -115,7 +126,7 @@ export async function POST(request: Request) {
     }
 
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), CLAUDE_TIMEOUT_MS);
+    const timeout = setTimeout(() => controller.abort(), PARSE_TIMEOUT_MS);
 
     let courses: ParsedCourse[];
     try {

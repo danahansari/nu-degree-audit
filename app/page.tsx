@@ -49,7 +49,7 @@ export default function Home() {
   const uploadDisabled = state === "loading" || state === "error";
   const isUploadValidationError =
     error === "Please upload a PDF file" ||
-    error === "File too large. Please upload your transcript PDF (should be under 10MB)" ||
+    error === "File too large. Please upload your transcript PDF (should be under 4.5MB)" ||
     error === "No transcript file provided";
 
   const onFileSelect = async (file: File) => {
@@ -65,6 +65,20 @@ export default function Home() {
         method: "POST",
         body: formData,
       });
+
+      const contentType = res.headers.get("content-type") ?? "";
+      if (!contentType.includes("application/json")) {
+        const text = await res.text();
+        if (res.status === 413) {
+          throw new Error("File too large for the server (max ~4.5MB). Try a smaller PDF.");
+        }
+        if (res.status === 504 || /timeout/i.test(text)) {
+          throw new Error("Request timed out. Please try again.");
+        }
+        throw new Error(
+          `Server error (${res.status}). If this persists after redeploying, check Vercel function logs.`,
+        );
+      }
 
       const data = (await res.json()) as
         | { courses: ParsedCourse[]; courseCount: number; studentName?: string; gpa?: string }
