@@ -40,15 +40,6 @@ export function CourseLegend() {
             <span className="text-xs text-gray-600">{item.label}</span>
           </div>
         ))}
-        <div className="inline-flex items-center gap-2">
-          <span
-            className="inline-flex h-5 items-center rounded-full bg-white px-2 text-[10px] font-bold leading-none text-[#4E2A84] ring-1 ring-gray-200"
-            aria-hidden="true"
-          >
-            2×
-          </span>
-          <span className="text-xs text-gray-600">Counts toward EE &amp; CS Minor</span>
-        </div>
       </div>
     </div>
   );
