@@ -110,7 +110,7 @@ export default function Home() {
             </div>
             <div className="mt-2 flex items-center justify-between text-xs text-gray-500">
               <span>{Math.round(progress)}%</span>
-              <span>This usually takes 5–10 seconds</span>
+              <span>This usually takes 10-15 seconds</span>
             </div>
           </div>
         )}
