@@ -1,0 +1,86 @@
+[
+  {
+    "exam": "Mathematics (Calculus) AB",
+    "score": "4",
+    "courseCredit": "MATH 220-1",
+    "units": 1,
+    "allocation": "Math Requirement"
+  },
+  {
+    "exam": "Mathematics (Calculus) AB",
+    "score": "5",
+    "courseCredit": "MATH 220-1, MATH 220-2",
+    "units": 2,
+    "allocation": "Math Requirement"
+  },
+  {
+    "exam": "Mathematics (Calculus) BC",
+    "score": "4",
+    "courseCredit": "MATH 220-1, MATH 220-2",
+    "units": 2,
+    "allocation": "Math Requirement"
+  },
+  {
+    "exam": "Mathematics (Calculus) BC",
+    "score": "5",
+    "courseCredit": "MATH 220-1, MATH 220-2, MATH 226-0",
+    "units": 3,
+    "allocation": "Math Requirement & Unrestricted Elective (MATH 226-0)"
+  },
+  {
+    "exam": "Physics C (Electricity & Magnetism)",
+    "score": "5",
+    "courseCredit": "PHYSICS 135-2, PHYSICS 136-2",
+    "units": 1.34,
+    "allocation": "Basic Science or Unrestricted Elective"
+  },
+  {
+    "exam": "Physics C (Mechanics)",
+    "score": "5",
+    "courseCredit": "PHYSICS 135-1, PHYSICS 136-1",
+    "units": 1.34,
+    "allocation": "Unrestricted Elective or Basic Science"
+  },
+  {
+    "exam": "Chemistry",
+    "score": "5",
+    "courseCredit": "CHEM 1XX",
+    "units": 1,
+    "allocation": "Basic Science or Unrestricted Elective"
+  },
+  {
+    "exam": "Biology",
+    "score": "5",
+    "courseCredit": "BIOL_SCI 1XX",
+    "units": 1,
+    "allocation": "Unrestricted Elective"
+  },
+  {
+    "exam": "Statistics",
+    "score": "4, 5",
+    "courseCredit": "STAT 210-0",
+    "units": 1,
+    "allocation": "Unrestricted Elective or Major Requirement"
+  },
+  {
+    "exam": "Computer Science A",
+    "score": "4, 5",
+    "courseCredit": "COMP_SCI 1CA",
+    "units": 1,
+    "allocation": "Unrestricted Elective"
+  },
+  {
+    "exam": "English (Language and Composition)",
+    "score": "5",
+    "courseCredit": "ENGLISH 1LC",
+    "units": 2,
+    "allocation": "Theme or Unrestricted Elective"
+  },
+  {
+    "exam": "Psychology",
+    "score": "5",
+    "courseCredit": "PSYCHOLOGY 110",
+    "units": 1,
+    "allocation": "Theme or Unrestricted Elective"
+  }
+]

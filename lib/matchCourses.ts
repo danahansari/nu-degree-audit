@@ -1,26 +1,14 @@
 import type { MatchedRequirement, ParsedCourse, Requirement, RequirementCourse } from "./types";
+import { isApprovedBasicScienceCourse, isBasicScienceLabCourse } from "./basicScienceCourses";
+import {
+  isAbetEngineeringTopicsCourse,
+  isEe300LevelCeeElective,
+  isEeAdvancedTechnicalElective,
+  isEeTrackTechnicalElective,
+} from "./eeTechnicalElectives";
+import { normalizeCode } from "./courseCodes";
 
-export function normalizeCode(code: string): string {
-  const trimmed = code.trim();
-  if (!trimmed) return "";
-
-  // Normalize separators: underscores/spaces, collapse runs, uppercase.
-  const cleaned = trimmed.replace(/[_\s]+/g, " ").toUpperCase();
-  const parts = cleaned.split(" ").filter(Boolean);
-  if (parts.length === 0) return "";
-
-  // If last token looks like the catalog number (e.g. 111-0, 205-1)
-  // treat everything before as the subject prefix and join with underscores.
-  const last = parts[parts.length - 1];
-  const looksLikeNumber = /^\d{3}(?:-\d{1,2})?$/.test(last);
-
-  if (looksLikeNumber && parts.length >= 2) {
-    const subject = parts.slice(0, -1).join("_").replace(/_+/g, "_");
-    return `${subject} ${last}`;
-  }
-
-  return parts.join(" ");
-}
+export { normalizeCode };
 
 export function findExactMatch(
   courseCode: string,
@@ -140,12 +128,20 @@ function isEngineeringCourse(courseCode: string): boolean {
   return subject.length > 0 && engineeringish.has(subject);
 }
 
+const DESIGN_COMM_ELECTIVES = new Set([
+  "COMM_ST 102-0",
+  "PERF_ST 103-0",
+  "PERF_ST 203-0",
+  "BMD_ENG 390-2",
+]);
+
 function shouldExcludeFromSsh(courseCode: string): boolean {
   const code = normalizeCode(courseCode);
   return (
     code.startsWith("DSGN 106-") ||
     code === "ENGLISH 106-1" ||
-    code === "ENGLISH 106-2"
+    code === "ENGLISH 106-2" ||
+    DESIGN_COMM_ELECTIVES.has(code)
   );
 }
 
@@ -226,6 +222,16 @@ export function computeAudit(
 
   const usedSshCourseKeys = new Set<string>();
   const usedUnrestrictedCourseKeys = new Set<string>();
+  const usedBasicScienceCourseKeys = new Set<string>();
+  const usedEeTrackKeys = new Set<string>();
+  const usedEe300Keys = new Set<string>();
+  const usedEeAdvancedKeys = new Set<string>();
+  const usedEeAbetKeys = new Set<string>();
+  const globallyUsedCourseKeys = new Set<string>();
+
+  for (const w of working) {
+    for (const key of w.usedCourseKeys) globallyUsedCourseKeys.add(key);
+  }
 
   const fillElectivesForRequirement = (
     requirementId: string,
@@ -241,14 +247,16 @@ export function computeAudit(
 
     for (const { c: reqCourse, idx } of slots) {
       const slotUnits = reqCourse.units || 0;
+      const remaining = w.requirement.totalUnits - w.completedUnits;
 
-      if (w.electiveUnitsFilled >= w.requirement.totalUnits) break;
-      if (w.electiveUnitsFilled + slotUnits > w.requirement.totalUnits) break;
+      if (remaining <= 0) break;
+      if (slotUnits > 0 && remaining < slotUnits) break;
 
       const slotKey =
         reqCourse.code?.trim() ? reqCourse.code : `__ELECTIVE__:${w.requirement.id}:${idx}`;
 
       const candidates = courses
+        .filter((course) => !globallyUsedCourseKeys.has(makeCourseKey(course)))
         .filter((course) => !w.usedCourseKeys.has(makeCourseKey(course)))
         .filter((course) => !usedWithinType.has(makeCourseKey(course)))
         .filter(candidateFilter);
@@ -257,22 +265,58 @@ export function computeAudit(
       if (!best) continue;
 
       usedWithinType.add(makeCourseKey(best));
+      globallyUsedCourseKeys.add(makeCourseKey(best));
       addMatch(w, best, slotKey, reqCourse);
       w.electiveUnitsFilled += slotUnits;
     }
   };
 
-  // Phase 2: SS/H slots second (non-engineering, 1 unit, unique within SS/H)
+  // Phase 2: Basic science elective slots (approved list only)
+  fillElectivesForRequirement(
+    "mccormick-basic-sciences",
+    (c) => isApprovedBasicScienceCourse(c.code) && !isBasicScienceLabCourse(c.code),
+    usedBasicScienceCourseKeys,
+  );
+
+  // Phase 3: EE technical elective tracks (6 courses)
+  fillElectivesForRequirement(
+    "ee-technical-electives-tracks",
+    (c) => isEeTrackTechnicalElective(c.code),
+    usedEeTrackKeys,
+  );
+
+  // Phase 4: EE 300/400-level CS/ECE/CE electives (2 courses)
+  fillElectivesForRequirement(
+    "ee-technical-electives-300",
+    (c) => isEe300LevelCeeElective(c.code),
+    usedEe300Keys,
+  );
+
+  // Phase 5: EE advanced technical electives (2 courses)
+  fillElectivesForRequirement(
+    "ee-technical-electives-advanced",
+    (c) => isEeAdvancedTechnicalElective(c.code),
+    usedEeAdvancedKeys,
+  );
+
+  // Phase 6: EE ABET engineering topics elective (after other EE buckets)
+  fillElectivesForRequirement(
+    "ee-required",
+    (c) => isAbetEngineeringTopicsCourse(c.code),
+    usedEeAbetKeys,
+  );
+
+  // Phase 7: SS/H slots (non-engineering, unique within SS/H)
   fillElectivesForRequirement(
     "mccormick-ssh",
     (c) =>
       !isEngineeringCourse(c.code) &&
       !shouldExcludeFromSsh(c.code) &&
-      (c.attempted || 0) === 1,
+      (c.attempted || 0) >= 1,
     usedSshCourseKeys,
   );
 
-  // Phase 3: Unrestricted electives last (anything remaining, unique within unrestricted)
+  // Phase 8: Unrestricted electives last (anything remaining, unique within unrestricted)
   fillElectivesForRequirement("mccormick-unrestricted", () => true, usedUnrestrictedCourseKeys);
 
   return working.map((w) => {

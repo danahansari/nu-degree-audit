@@ -2,17 +2,16 @@
 
 import { useMemo, useState } from "react";
 
-import type { MatchedRequirement, ParsedCourse } from "@/lib/types";
+import type { MatchedRequirement } from "@/lib/types";
 import { RequirementSection } from "@/components/RequirementSection";
-import { CourseChip } from "@/components/CourseChip";
 
 interface DashboardTabsProps {
-  eeRequirements: MatchedRequirement[]; // degree: "EE" or "MCCORMICK_CORE"
-  csRequirements: MatchedRequirement[]; // degree: "CS_MINOR"
-  doubleCounts: { course: ParsedCourse; satisfiesIds: string[]; satisfiesNames: string[] }[];
+  coreRequirements: MatchedRequirement[];
+  eeRequirements: MatchedRequirement[];
+  csRequirements: MatchedRequirement[];
 }
 
-type TabId = "ee" | "cs" | "double";
+type TabId = "core" | "ee" | "cs";
 
 function TabButton({
   active,
@@ -37,15 +36,8 @@ function TabButton({
   );
 }
 
-export function DashboardTabs({ eeRequirements, csRequirements, doubleCounts }: DashboardTabsProps) {
-  const [active, setActive] = useState<TabId>("ee");
-
-  const { coreReqs, eeReqs } = useMemo(() => {
-    return {
-      coreReqs: eeRequirements.filter((r) => r.degree === "MCCORMICK_CORE"),
-      eeReqs: eeRequirements.filter((r) => r.degree === "EE"),
-    };
-  }, [eeRequirements]);
+export function DashboardTabs({ coreRequirements, eeRequirements, csRequirements }: DashboardTabsProps) {
+  const [active, setActive] = useState<TabId>("core");
 
   const csById = useMemo(() => {
     const map = new Map<string, MatchedRequirement>();
@@ -75,6 +67,27 @@ export function DashboardTabs({ eeRequirements, csRequirements, doubleCounts }: 
     return list;
   }, [csById, csRequirements]);
 
+  const eeOrdered = useMemo(() => {
+    const order = [
+      "ee-required",
+      "ee-technical-electives-tracks",
+      "ee-technical-electives-300",
+      "ee-technical-electives-advanced",
+      "ee-design",
+    ];
+
+    const byId = new Map(eeRequirements.map((r) => [r.id, r]));
+    const list: MatchedRequirement[] = [];
+    for (const id of order) {
+      const r = byId.get(id);
+      if (r) list.push(r);
+    }
+    for (const r of eeRequirements) {
+      if (!order.includes(r.id)) list.push(r);
+    }
+    return list;
+  }, [eeRequirements]);
+
   const breadthCompletedAreas = useMemo(() => {
     const breadthIds = new Set([
       "cs-minor-theory",
@@ -102,37 +115,31 @@ export function DashboardTabs({ eeRequirements, csRequirements, doubleCounts }: 
     <div>
       <div className="sticky top-16 z-10 border-b border-gray-200 bg-white">
         <div className="flex">
+          <TabButton active={active === "core"} onClick={() => setActive("core")}>
+            McCormick Core
+          </TabButton>
           <TabButton active={active === "ee"} onClick={() => setActive("ee")}>
             EE Degree
           </TabButton>
           <TabButton active={active === "cs"} onClick={() => setActive("cs")}>
             CS Minor
           </TabButton>
-          <TabButton active={active === "double"} onClick={() => setActive("double")}>
-            Double-Counts
-          </TabButton>
         </div>
       </div>
 
-      {active === "ee" ? (
-        <div className="mt-6 space-y-8">
-          <div>
-            <div className="font-heading text-sm font-bold text-gray-900">McCormick School Requirements</div>
-            <div className="mt-3 space-y-3">
-              {coreReqs.map((r) => (
-                <RequirementSection key={r.id} requirement={r} />
-              ))}
-            </div>
-          </div>
+      {active === "core" ? (
+        <div className="mt-6 space-y-3">
+          {coreRequirements.map((r) => (
+            <RequirementSection key={r.id} requirement={r} />
+          ))}
+        </div>
+      ) : null}
 
-          <div>
-            <div className="font-heading text-sm font-bold text-gray-900">Electrical Engineering Requirements</div>
-            <div className="mt-3 space-y-3">
-              {eeReqs.map((r) => (
-                <RequirementSection key={r.id} requirement={r} />
-              ))}
-            </div>
-          </div>
+      {active === "ee" ? (
+        <div className="mt-6 space-y-3">
+          {eeOrdered.map((r) => (
+            <RequirementSection key={r.id} requirement={r} />
+          ))}
         </div>
       ) : null}
 
@@ -151,53 +158,6 @@ export function DashboardTabs({ eeRequirements, csRequirements, doubleCounts }: 
           </div>
         </div>
       ) : null}
-
-      {active === "double" ? (
-        <div className="mt-6">
-          <div className="rounded-xl border border-gray-200 bg-white p-4 text-sm text-gray-700">
-            <div className="font-semibold text-gray-900">Double-count courses</div>
-            <div className="mt-1">
-              These courses satisfy requirements in both your EE degree and CS minor, saving you time.
-            </div>
-          </div>
-
-          {doubleCounts.length === 0 ? (
-            <div className="mt-4 rounded-xl border border-gray-200 bg-white p-6 text-sm text-gray-700">
-              No double-count courses yet — they'll appear here as you complete more requirements.
-            </div>
-          ) : (
-            <div className="mt-4 space-y-3">
-              {doubleCounts.map((d) => (
-                <div
-                  key={`${d.course.code}|${d.course.term}|${d.course.grade}`}
-                  className="rounded-xl border border-gray-200 bg-white p-4"
-                >
-                  <div className="flex flex-col gap-2">
-                    <CourseChip
-                      code={d.course.code}
-                      name={d.course.name}
-                      status={d.course.status as any}
-                      units={d.course.attempted}
-                      isDoubleCount={true}
-                    />
-                    <div className="flex flex-wrap gap-2">
-                      {d.satisfiesNames.map((name) => (
-                        <span
-                          key={name}
-                          className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700"
-                        >
-                          {name}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      ) : null}
     </div>
   );
 }
-

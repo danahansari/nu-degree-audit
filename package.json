@@ -7,7 +7,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "verify": "npm run test && npm run build",
+    "clean": "rm -rf .next"
   },
   "keywords": [],
   "author": "",
@@ -34,7 +38,8 @@
     "tailwindcss": "^4.2.4",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vitest": "^3.2.4"
   },
   "ts-node": {
     "transpileOnly": true,

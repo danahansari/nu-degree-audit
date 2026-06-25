@@ -4,11 +4,12 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 import type { ParsedCourse } from "@/lib/types";
-import { computeAudit, getDoubleCounts, getProgressSummary } from "@/lib/matchCourses";
+import { computeAudit, getProgressSummary } from "@/lib/matchCourses";
 import { getAllRequirements } from "@/lib/requirements";
 import { SummaryBar } from "@/components/SummaryBar";
 import { DashboardTabs } from "@/components/DashboardTabs";
 import { CourseLegend } from "@/components/CourseLegend";
+import { CatalogLinks } from "@/components/CatalogLinks";
 
 export default function DashboardPage() {
   const [rawCourses, setRawCourses] = useState<string | null>(null);
@@ -70,7 +71,6 @@ export default function DashboardPage() {
 
   const allRequirements = getAllRequirements();
   const auditResults = computeAudit(parsedCourses, allRequirements);
-  const doubleCounts = getDoubleCounts(auditResults);
   const summary = getProgressSummary(auditResults);
 
   return (
@@ -103,14 +103,14 @@ export default function DashboardPage() {
             </div>
           ) : (
             <DashboardTabs
-              eeRequirements={auditResults.filter(
-                (r) => r.degree === "EE" || r.degree === "MCCORMICK_CORE",
-              )}
+              coreRequirements={auditResults.filter((r) => r.degree === "MCCORMICK_CORE")}
+              eeRequirements={auditResults.filter((r) => r.degree === "EE")}
               csRequirements={auditResults.filter((r) => r.degree === "CS_MINOR")}
-              doubleCounts={doubleCounts}
             />
           )}
         </div>
+
+        <CatalogLinks />
       </div>
     </main>
   );

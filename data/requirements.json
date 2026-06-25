@@ -4,6 +4,7 @@
     "category": "Mathematics",
     "degree": "MCCORMICK_CORE",
     "totalUnits": 4,
+    "description": "Standard for all degree programs.",
     "courses": [
       {
         "code": "MATH 220-1",
@@ -25,15 +26,16 @@
         "code": "MATH 228-2",
         "name": "Multivariable Integral Calculus for Engineering",
         "units": 1,
-        "alternatives": ["MATH 230-1"]
+        "alternatives": ["MATH 230-2"]
       }
     ]
   },
   {
-    "id": "mccormick-physics",
-    "category": "Basic Science — Physics",
+    "id": "mccormick-basic-sciences",
+    "category": "Basic Sciences",
     "degree": "MCCORMICK_CORE",
-    "totalUnits": 2,
+    "totalUnits": 4,
+    "description": "4 units total: PHYSICS 135-2/136-2 and PHYSICS 135-3/136-3 sequences (2.66 units including 0.33-unit labs), plus 1.33 units from McCormick-approved basic science categories (Chemistry, Physics, Biological Science, Earth & Planetary Science, or Astronomy).",
     "courses": [
       {
         "code": "PHYSICS 135-2",
@@ -44,7 +46,7 @@
       {
         "code": "PHYSICS 136-2",
         "name": "General Physics Laboratory",
-        "units": 0
+        "units": 0.33
       },
       {
         "code": "PHYSICS 135-3",
@@ -55,23 +57,14 @@
       {
         "code": "PHYSICS 136-3",
         "name": "General Physics Laboratory",
-        "units": 0
-      }
-    ]
-  },
-  {
-    "id": "mccormick-science-elective",
-    "category": "Basic Science — Elective",
-    "degree": "MCCORMICK_CORE",
-    "totalUnits": 1,
-    "description": "1 unit from Chemistry, Physics, Biological Science, Earth & Planetary Science, or Astronomy",
-    "courses": [
+        "units": 0.33
+      },
       {
         "code": "",
-        "name": "Science Elective",
-        "units": 1,
+        "name": "Basic Science Elective",
+        "units": 1.33,
         "isElective": true,
-        "electiveDescription": "1 unit from Chemistry, Physics, Biological Science, Earth & Planetary Science, or Astronomy"
+        "electiveDescription": "1.33 units from McCormick-approved basic science categories (Chemistry, Physics, Biological Science, Earth & Planetary Science, or Astronomy)"
       }
     ]
   },
@@ -80,11 +73,13 @@
     "category": "Engineering Analysis",
     "degree": "MCCORMICK_CORE",
     "totalUnits": 4,
+    "description": "Standard for all degree programs.",
     "courses": [
       {
         "code": "GEN_ENG 205-1",
         "name": "Engineering Analysis I",
-        "units": 1
+        "units": 1,
+        "alternatives": ["GEN_ENG 206-1"]
       },
       {
         "code": "GEN_ENG 205-2",
@@ -99,7 +94,8 @@
       {
         "code": "GEN_ENG 205-4",
         "name": "Engineering Analysis IV",
-        "units": 1
+        "units": 1,
+        "alternatives": ["GEN_ENG 206-4"]
       }
     ]
   },
@@ -108,6 +104,7 @@
     "category": "Design & Communications",
     "degree": "MCCORMICK_CORE",
     "totalUnits": 3,
+    "description": "DSGN 106 and ENGLISH 106 sequences, plus one approved design elective",
     "courses": [
       {
         "code": "DSGN 106-1",
@@ -128,6 +125,12 @@
         "code": "ENGLISH 106-2",
         "name": "Writing in Special Contexts II",
         "units": 0.5
+      },
+      {
+        "code": "COMM_ST 102-0",
+        "name": "Public Speaking",
+        "units": 1,
+        "alternatives": ["PERF_ST 103-0", "PERF_ST 203-0", "BMD_ENG 390-2"]
       }
     ]
   },
@@ -136,56 +139,56 @@
     "category": "Social Sciences/Humanities",
     "degree": "MCCORMICK_CORE",
     "totalUnits": 7,
-    "description": "7 units from approved Social Sciences or Humanities courses",
+    "description": "Standard for all degree programs. Submit theme form for approval by winter quarter of junior year. 7 social sciences/humanities courses; maximum of 5 credits from either category; at least 3 courses must be thematically related; no more than 3 100-level courses. AP, IB, and transfer credits are eligible.",
     "courses": [
       {
         "code": "",
         "name": "Social Sciences/Humanities Elective 1",
         "units": 1,
         "isElective": true,
-        "electiveDescription": "Any approved Social Sciences or Humanities course (1 unit)"
+        "electiveDescription": "Approved social sciences or humanities course (1 unit). AP/IB/transfer credit eligible."
       },
       {
         "code": "",
         "name": "Social Sciences/Humanities Elective 2",
         "units": 1,
         "isElective": true,
-        "electiveDescription": "Any approved Social Sciences or Humanities course (1 unit)"
+        "electiveDescription": "Approved social sciences or humanities course (1 unit). AP/IB/transfer credit eligible."
       },
       {
         "code": "",
         "name": "Social Sciences/Humanities Elective 3",
         "units": 1,
         "isElective": true,
-        "electiveDescription": "Any approved Social Sciences or Humanities course (1 unit)"
+        "electiveDescription": "Approved social sciences or humanities course (1 unit). AP/IB/transfer credit eligible."
       },
       {
         "code": "",
         "name": "Social Sciences/Humanities Elective 4",
         "units": 1,
         "isElective": true,
-        "electiveDescription": "Any approved Social Sciences or Humanities course (1 unit)"
+        "electiveDescription": "Approved social sciences or humanities course (1 unit). AP/IB/transfer credit eligible."
       },
       {
         "code": "",
         "name": "Social Sciences/Humanities Elective 5",
         "units": 1,
         "isElective": true,
-        "electiveDescription": "Any approved Social Sciences or Humanities course (1 unit)"
+        "electiveDescription": "Approved social sciences or humanities course (1 unit). AP/IB/transfer credit eligible."
       },
       {
         "code": "",
         "name": "Social Sciences/Humanities Elective 6",
         "units": 1,
         "isElective": true,
-        "electiveDescription": "Any approved Social Sciences or Humanities course (1 unit)"
+        "electiveDescription": "Approved social sciences or humanities course (1 unit). AP/IB/transfer credit eligible."
       },
       {
         "code": "",
         "name": "Social Sciences/Humanities Elective 7",
         "units": 1,
         "isElective": true,
-        "electiveDescription": "Any approved Social Sciences or Humanities course (1 unit)"
+        "electiveDescription": "Approved social sciences or humanities course (1 unit). AP/IB/transfer credit eligible."
       }
     ]
   },
@@ -194,42 +197,42 @@
     "category": "Unrestricted Electives",
     "degree": "MCCORMICK_CORE",
     "totalUnits": 5,
-    "description": "5 units of any courses",
+    "description": "Standard for all degree programs: students may take any credit course in the University to explore or extend technical or nontechnical interests.",
     "courses": [
       {
         "code": "",
         "name": "Unrestricted Elective 1",
         "units": 1,
         "isElective": true,
-        "electiveDescription": "Any course (1 unit)"
+        "electiveDescription": "Any credit course in the University (1 unit)"
       },
       {
         "code": "",
         "name": "Unrestricted Elective 2",
         "units": 1,
         "isElective": true,
-        "electiveDescription": "Any course (1 unit)"
+        "electiveDescription": "Any credit course in the University (1 unit)"
       },
       {
         "code": "",
         "name": "Unrestricted Elective 3",
         "units": 1,
         "isElective": true,
-        "electiveDescription": "Any course (1 unit)"
+        "electiveDescription": "Any credit course in the University (1 unit)"
       },
       {
         "code": "",
         "name": "Unrestricted Elective 4",
         "units": 1,
         "isElective": true,
-        "electiveDescription": "Any course (1 unit)"
+        "electiveDescription": "Any credit course in the University (1 unit)"
       },
       {
         "code": "",
         "name": "Unrestricted Elective 5",
         "units": 1,
         "isElective": true,
-        "electiveDescription": "Any course (1 unit)"
+        "electiveDescription": "Any credit course in the University (1 unit)"
       }
     ]
   },
@@ -259,7 +262,8 @@
       {
         "code": "GEN_ENG 205-1",
         "name": "Engineering Analysis I",
-        "units": 1
+        "units": 1,
+        "alternatives": ["GEN_ENG 206-1"]
       },
       {
         "code": "GEN_ENG 205-2",
@@ -392,12 +396,174 @@
     "id": "ee-required",
     "category": "EE Required Courses",
     "degree": "EE",
-    "totalUnits": 1,
+    "totalUnits": 10,
+    "description": "10 required courses including one McCormick 200+ course with 100% Engineering Topics (ABET).",
     "courses": [
       {
-        "code": "ELEC_ENG 202-0",
-        "name": "EE Required Course",
+        "code": "COMP_ENG 203-0",
+        "name": "Introduction to Computer Engineering",
         "units": 1
+      },
+      {
+        "code": "COMP_SCI 211-0",
+        "name": "Fundamentals of Computer Programming II",
+        "units": 1,
+        "alternatives": ["COMP_SCI 150-0"]
+      },
+      {
+        "code": "ELEC_ENG 202-0",
+        "name": "Introduction to Electrical Engineering",
+        "units": 1
+      },
+      {
+        "code": "ELEC_ENG 221-0",
+        "name": "Fundamentals of Circuits",
+        "units": 1
+      },
+      {
+        "code": "ELEC_ENG 222-0",
+        "name": "Fundamentals of Signals & Systems",
+        "units": 1
+      },
+      {
+        "code": "ELEC_ENG 223-0",
+        "name": "Fundamentals of Solid State Engineering",
+        "units": 1
+      },
+      {
+        "code": "ELEC_ENG 224-0",
+        "name": "Fund of Electromagnetics & Photonics",
+        "units": 1
+      },
+      {
+        "code": "ELEC_ENG 225-0",
+        "name": "Fundamentals of Electronics",
+        "units": 1
+      },
+      {
+        "code": "ELEC_ENG 302-0",
+        "name": "Probabilistic Systems",
+        "units": 1
+      },
+      {
+        "code": "",
+        "name": "ABET Engineering Topics Elective",
+        "units": 1,
+        "isElective": true,
+        "electiveDescription": "1 McCormick course at 200-level or higher with 100% Engineering Topics (ABET Course Partitioning Table)"
+      }
+    ]
+  },
+  {
+    "id": "ee-technical-electives-tracks",
+    "category": "EE Technical Electives — Tracks",
+    "degree": "EE",
+    "totalUnits": 6,
+    "description": "6 courses from EE technical elective tracks (biomedical, circuits, communications, control, signal processing/ML, electromagnetics/optics, solid-state).",
+    "courses": [
+      {
+        "code": "",
+        "name": "Technical Elective — Track",
+        "units": 1,
+        "isElective": true,
+        "electiveDescription": "Course from an approved EE technical elective track"
+      },
+      {
+        "code": "",
+        "name": "Technical Elective — Track",
+        "units": 1,
+        "isElective": true,
+        "electiveDescription": "Course from an approved EE technical elective track"
+      },
+      {
+        "code": "",
+        "name": "Technical Elective — Track",
+        "units": 1,
+        "isElective": true,
+        "electiveDescription": "Course from an approved EE technical elective track"
+      },
+      {
+        "code": "",
+        "name": "Technical Elective — Track",
+        "units": 1,
+        "isElective": true,
+        "electiveDescription": "Course from an approved EE technical elective track"
+      },
+      {
+        "code": "",
+        "name": "Technical Elective — Track",
+        "units": 1,
+        "isElective": true,
+        "electiveDescription": "Course from an approved EE technical elective track"
+      },
+      {
+        "code": "",
+        "name": "Technical Elective — Track",
+        "units": 1,
+        "isElective": true,
+        "electiveDescription": "Course from an approved EE technical elective track"
+      }
+    ]
+  },
+  {
+    "id": "ee-technical-electives-300",
+    "category": "EE Technical Electives — 300/400 Level",
+    "degree": "EE",
+    "totalUnits": 2,
+    "description": "2 courses at the 300- or 400-level in COMP_SCI, ELEC_ENG, or COMP_ENG (may include COMP_ENG 205-0 and track courses).",
+    "courses": [
+      {
+        "code": "",
+        "name": "300/400-Level Technical Elective",
+        "units": 1,
+        "isElective": true,
+        "electiveDescription": "300- or 400-level COMP_SCI, ELEC_ENG, or COMP_ENG technical elective"
+      },
+      {
+        "code": "",
+        "name": "300/400-Level Technical Elective",
+        "units": 1,
+        "isElective": true,
+        "electiveDescription": "300- or 400-level COMP_SCI, ELEC_ENG, or COMP_ENG technical elective"
+      }
+    ]
+  },
+  {
+    "id": "ee-technical-electives-advanced",
+    "category": "EE Technical Electives — Advanced",
+    "degree": "EE",
+    "totalUnits": 2,
+    "description": "2 courses: 300-level technical courses in science, mathematics, computer science, or engineering; or BIOL_SCI 201-0/202-0/203-0; or CHEM 215-1/215-2/215-3.",
+    "courses": [
+      {
+        "code": "",
+        "name": "Advanced Technical Elective",
+        "units": 1,
+        "isElective": true,
+        "electiveDescription": "300-level technical course in science, math, CS, or engineering; or approved BIOL_SCI/CHEM courses"
+      },
+      {
+        "code": "",
+        "name": "Advanced Technical Elective",
+        "units": 1,
+        "isElective": true,
+        "electiveDescription": "300-level technical course in science, math, CS, or engineering; or approved BIOL_SCI/CHEM courses"
+      }
+    ]
+  },
+  {
+    "id": "ee-design",
+    "category": "EE Design Course",
+    "degree": "EE",
+    "totalUnits": 1,
+    "description": "1 design course. ELEC_ENG 399-0 counts when it is a design project and the student has senior standing.",
+    "courses": [
+      {
+        "code": "",
+        "name": "Design Elective",
+        "units": 1,
+        "isElective": true,
+        "electiveDescription": "Pick ONE: COMP_ENG 347-1, COMP_ENG 392-0, ELEC_ENG 327-0, ELEC_ENG 398-0, ELEC_ENG 399-0"
       }
     ]
   }
