@@ -167,6 +167,51 @@ function unitsMatchedToSlot(
     }, 0);
 }
 
+type AuditWorking = {
+  requirement: Requirement;
+  satisfiedCourseCodes: Set<string>;
+  completedUnits: number;
+  matchedCourses: MatchedRequirement["matchedCourses"];
+};
+
+function computeUnmetCourses(w: AuditWorking): RequirementCourse[] {
+  const unmetFixed = w.requirement.courses.filter((reqCourse) => {
+    const isElectiveSlot = reqCourse.isElective || !reqCourse.code?.trim();
+    if (isElectiveSlot) return false;
+    return !w.satisfiedCourseCodes.has(normalizeCode(reqCourse.code));
+  });
+
+  const unitsRemaining = Math.max(0, w.requirement.totalUnits - w.completedUnits);
+  if (unitsRemaining <= 0) return unmetFixed;
+
+  const unmetFixedUnits = unmetFixed.reduce((sum, c) => sum + (c.units || 0), 0);
+  let electiveUnitsRemaining = Math.max(0, unitsRemaining - unmetFixedUnits);
+
+  const electiveSlots = w.requirement.courses
+    .map((c, idx) => ({ c, idx }))
+    .filter(({ c }) => c.isElective || !c.code?.trim());
+
+  if (electiveSlots.length === 0 || electiveUnitsRemaining <= 0.01) {
+    return unmetFixed;
+  }
+
+  const unmetElectives: RequirementCourse[] = [];
+
+  for (const { c: reqCourse, idx } of electiveSlots) {
+    if (electiveUnitsRemaining <= 0.01) break;
+    const slotKey = slotKeyFor(w.requirement, reqCourse, idx);
+    const filled = unitsMatchedToSlot(w.matchedCourses, slotKey);
+    const slotUnits = reqCourse.units || 1;
+    const slotGap = Math.max(0, slotUnits - filled);
+    if (slotGap > 0) {
+      unmetElectives.push(reqCourse);
+      electiveUnitsRemaining -= slotGap;
+    }
+  }
+
+  return [...unmetFixed, ...unmetElectives];
+}
+
 export function computeAudit(
   courses: ParsedCourse[],
   requirements: Requirement[],
@@ -419,18 +464,7 @@ export function computeAudit(
   fillElectivesForRequirement("mccormick-unrestricted", () => true, usedUnrestrictedCourseKeys);
 
   return working.map((w) => {
-    const unmetCourses = w.requirement.courses
-      .map((reqCourse, idx) => ({ reqCourse, idx }))
-      .filter(({ reqCourse, idx }) => {
-        const isElectiveSlot = reqCourse.isElective || !reqCourse.code?.trim();
-        if (isElectiveSlot) {
-          const slotKey =
-            reqCourse.code?.trim() ? reqCourse.code : `__ELECTIVE__:${w.requirement.id}:${idx}`;
-          return !w.matchedCourses.some((m) => m.requirementCourseCode === slotKey);
-        }
-        return !w.satisfiedCourseCodes.has(normalizeCode(reqCourse.code));
-      })
-      .map(({ reqCourse }) => reqCourse);
+    const unmetCourses = computeUnmetCourses(w);
 
     return {
       ...w.requirement,

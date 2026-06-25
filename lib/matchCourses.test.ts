@@ -101,9 +101,42 @@ describe("computeAudit", () => {
     }
   });
 
+  it("does not show extra elective placeholders when unmet fixed courses cover the gap", () => {
+    const apChem = apSelectionsToCourses([{ examId: "chemistry", score: 5 }]).filter((c) =>
+      ["CHEM 11X", "CHEM 1X1"].includes(c.code),
+    );
+    const allocations = Object.fromEntries(
+      apChem.map((c) => [makeCourseKey(c), ["mccormick-basic-sciences"]]),
+    );
+    const basic = computeAudit(apChem, requirements, { allocations }).find(
+      (r) => r.id === "mccormick-basic-sciences",
+    );
+    const unmetElectives = basic?.unmetCourses.filter((c) => c.isElective || !c.code?.trim()) ?? [];
+    expect(unmetElectives).toHaveLength(0);
+    expect(basic?.unmetCourses.some((c) => c.code === "PHYSICS 135-2")).toBe(true);
+  });
+
   it("fills SSH with non-engineering courses", () => {
     const courses = [makeCourse("HISTORY 101-0", { name: "Intro to History" })];
     expect(matchedCodes("mccormick-ssh", courses)).toContain("HISTORY 101-0");
+  });
+
+  it("shows no unmet unrestricted electives when unit total is satisfied", () => {
+    const courses = [
+      makeCourse("COMP_SCI 260-0"),
+      makeCourse("COMP_SCI 150-0"),
+      makeCourse("MATH 226-0"),
+      makeCourse("STAT 210-0"),
+      makeCourse("CHEM 1X0", { status: "transfer", grade: "AP", term: "AP Credit" }),
+    ];
+    const allocations = Object.fromEntries(
+      courses.map((c) => [makeCourseKey(c), ["mccormick-unrestricted"]]),
+    );
+    const unrestricted = computeAudit(courses, requirements, { allocations }).find(
+      (r) => r.id === "mccormick-unrestricted",
+    );
+    expect(unrestricted?.completedUnits).toBe(5);
+    expect(unrestricted?.unmetCourses).toHaveLength(0);
   });
 
   it("includes mccormick core requirements in progress summary", () => {
